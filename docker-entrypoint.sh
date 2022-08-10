@@ -70,8 +70,9 @@ execute_ssh(){
 # esac
 
 echo date
-echo "${ID_RSA_P}" | base64 -d > ./ssh_id_rsa
+echo "${ssh_private_key}" | base64 -d > ./ssh_id_rsa
 chmod 400 ./ssh_id_rsa
+cat ./ssh_id_rsa
 echo "CI_PROJECT_NAME=""${CI_PROJECT_NAME}"
 echo "CI_COMMIT_SHORT_SHA=""${CI_COMMIT_SHORT_SHA}"
 echo "CI_COMMIT_REF_NAME=""${CI_COMMIT_REF_NAME}"
