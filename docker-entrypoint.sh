@@ -76,7 +76,7 @@ echo "CI_PROJECT_NAME=""${CI_PROJECT_NAME}"
 echo "CI_COMMIT_SHORT_SHA=""${CI_COMMIT_SHORT_SHA}"
 echo "CI_COMMIT_REF_NAME=""${CI_COMMIT_REF_NAME}"
 ssh  -o  StrictHostKeyChecking=no -o IdentitiesOnly=yes -i ./ssh_id_rsa -F /dev/null -f  -L 0.0.0.0:2222:${TARGET_HOST}:${TARGET_PORT} ${REMOTE_USER}@${REMOTE_HOST} tail "-f /dev/null"
-echo ${COMMAND}
-ssh  -p 2222 -o  StrictHostKeyChecking=no -o IdentitiesOnly=yes -i ./ssh_id_rsa -F /dev/null ${TARGET_USER}@127.0.0.1 ${COMMAND} || true
+echo "${COMMAND}"
+ssh  -p 2222 -o  StrictHostKeyChecking=no -o IdentitiesOnly=yes -i ./ssh_id_rsa -F /dev/null ${TARGET_USER}@127.0.0.1 "${COMMAND}" || true
 
 
