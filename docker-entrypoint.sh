@@ -1,6 +1,8 @@
 #!/bin/sh
 set -x
 
+
+export COMMAND=$(echo "${COMMAND}" | envsubst)
 echo "${COMMAND}"
 
 echo "${ID_RSA_P}" | base64 -d > ./ssh_id_rsa
