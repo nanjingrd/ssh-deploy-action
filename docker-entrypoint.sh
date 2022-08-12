@@ -1,7 +1,7 @@
 #!/bin/sh
-set -x
+set -ex
 
-
+echo "#################################run in target host  #################################"
 export COMMAND=$(echo "${COMMAND}" | envsubst)
 echo "${COMMAND}"
 
