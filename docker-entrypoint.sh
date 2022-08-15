@@ -2,7 +2,8 @@
 set -ex
 
 echo "#################################run in target host  #################################"
-export COMMAND=$(echo "{\n ${COMMAND} \n } > 2>&1 | tee /tmp/log.txt\n" | envsubst)
+export uuid=$(uuidgen |sed 's/-//g')
+export COMMAND=$(echo "{ ${COMMAND}  } > 2>&1 | tee /tmp/remote-${uuid}.txt" | envsubst)
 echo "${COMMAND}"
 
 echo "${ID_RSA_P}" | base64 -d > ./ssh_id_rsa
@@ -15,4 +16,10 @@ ssh  -o  StrictHostKeyChecking=no -o IdentitiesOnly=yes -i ./ssh_id_rsa -F /dev/
 
 ssh  -p 2222 -o  StrictHostKeyChecking=no -o IdentitiesOnly=yes -i ./ssh_id_rsa -F /dev/null ${TARGET_USER}@127.0.0.1 "${COMMAND}" || true
 
+ssh  -p 2222 -o  StrictHostKeyChecking=no -o IdentitiesOnly=yes -i ./ssh_id_rsa -F /dev/null ${TARGET_USER}@127.0.0.1 "/tmp/remote-${uuid}.txt" | tee /tmp/local-log.txt
 
+cat /tmp/local-log.txt
+
+export runlog=`cat /tmp/local-log.txt`
+
+echo "::set-output name=runlog::$runlog"

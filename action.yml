@@ -5,7 +5,9 @@ inputs:
   ssh_private_key:
     description: SSH private key used to connect to the docker host
     required: true
-  
+outputs:
+  runlog: 
+    description: 'The stout and sterr from remote server'
 
 runs:
   using: docker
