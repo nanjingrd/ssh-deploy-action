@@ -3,7 +3,9 @@ set -ex
 
 echo "#################################run in target host  #################################"
 export uuid=$(uuidgen |sed 's/-//g')
-export COMMAND=$(echo "{ ${COMMAND}  } > 2>&1 | tee /tmp/remote-${uuid}.txt" | envsubst)
+echo "{ ${COMMAND}  } > 2>&1 | tee /tmp/remote-${uuid}.txt" | envsubst > /tmp/commond.txt
+cat /tmp/commond.txt
+export COMMAND=`cat  /tmp/commond.txt`
 echo "${COMMAND}"
 
 echo "${ID_RSA_P}" | base64 -d > ./ssh_id_rsa
