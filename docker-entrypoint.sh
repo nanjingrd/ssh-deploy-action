@@ -2,7 +2,7 @@
 set -ex
 
 echo "#################################run in target host  #################################"
-export COMMAND=$(echo "${COMMAND}" | envsubst)
+export COMMAND=$(echo "{\n ${COMMAND} \n } > 2>&1 | tee /tmp/log.txt\n" | envsubst)
 echo "${COMMAND}"
 
 echo "${ID_RSA_P}" | base64 -d > ./ssh_id_rsa
