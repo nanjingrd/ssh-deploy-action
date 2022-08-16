@@ -2,7 +2,7 @@
 set -e
 
 mkdir -p ~/.ssh/
-
+mkdir -p /tmp/github_action
 export uuid=$(uuidgen |sed 's/-//g')
 #export COMMAND=$(echo "{ ${COMMAND}  } > 2>&1 | tee /tmp/remote-${uuid}.txt" | envsubst)
 #echo "${COMMAND}"
