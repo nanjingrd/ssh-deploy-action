@@ -26,6 +26,7 @@ echo ""
 echo "------post stage------"
 export stage=post
 export STAGE_COMMAND="${POSTCOMMAND}"
+/runcommand.sh || true
 echo ">>>>>>post log start>>>>>>"
 cat /tmp/github_action/${stage}-github-aciton.log
 echo ">>>>>>post log end>>>>>>"
