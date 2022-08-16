@@ -28,7 +28,7 @@ ssh  -p 2222 -o  StrictHostKeyChecking=no -o IdentitiesOnly=yes -i ./ssh_id_rsa 
 
 export returnCode=`ssh  -p 2222 -o  StrictHostKeyChecking=no -o IdentitiesOnly=yes -i ./ssh_id_rsa -F /dev/null daqian@127.0.0.1 "cat /tmp/${uuid}_remotescript_returncode.txt"`
 
-scp -P 2222 -o 'StrictHostKeyChecking=no' -o 'IdentitiesOnly=yes' -i ./ssh_id_rsa -F /dev/null daqian@127.0.0.1:/tmp/{uuid}-github-aciton.log /tmp/${uuid}-github-aciton.log
+scp -P 2222 -o 'StrictHostKeyChecking=no' -o 'IdentitiesOnly=yes' -i ./ssh_id_rsa -F /dev/null daqian@127.0.0.1:/tmp/${uuid}-github-aciton.log /tmp/${uuid}-github-aciton.log
 
 #ssh  -p 2222 -o  StrictHostKeyChecking=no -o IdentitiesOnly=yes -i ./ssh_id_rsa -F /dev/null ${TARGET_USER}@127.0.0.1 "rm -rf /tmp/${uuid}*" || true
 
