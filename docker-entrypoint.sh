@@ -11,6 +11,8 @@ chmod 400 /tmp/git_action_ssh_id_rsa
 
 sleep 2
 
+chmod +x /runcommand.sh
+
 echo "------main stage------"
 export stage=main
 export STAGE_COMMAND="${COMMAND}"
