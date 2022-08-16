@@ -1,5 +1,5 @@
 #!/bin/sh
-set -e
+set -ex
 
 #export COMMAND=$(echo "{ ${COMMAND}  } > 2>&1 | tee /tmp/remote-${uuid}.txt" | envsubst)
 #echo "${COMMAND}"
@@ -9,8 +9,6 @@ chmod +x /tmp/github_action/${stage}_remotescript.sh
 #cat /tmp/github_action/${uuid}/${stage}_remotescript.sh
 
 sleep 2
-
-ssh  -o  StrictHostKeyChecking=no -o IdentitiesOnly=yes -i /tmp/git_action_ssh_id_rsa -F /dev/null -f  -L 0.0.0.0:2222:${TARGET_HOST}:${TARGET_PORT} ${JUMP_USER}@${JUMP_HOST} tail "-f /dev/null"
 
 ssh  -p 2222 -o  StrictHostKeyChecking=no -o IdentitiesOnly=yes -i /tmp/git_action_ssh_id_rsa -F /dev/null ${TARGET_USER}@127.0.0.1 "mkdir -p /tmp/github_action/${uuid}"
 
