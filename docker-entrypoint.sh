@@ -6,7 +6,7 @@ export uuid=$(uuidgen |sed 's/-//g')
 #export COMMAND=$(echo "{ ${COMMAND}  } > 2>&1 | tee /tmp/remote-${uuid}.txt" | envsubst)
 #echo "${COMMAND}"
 echo "${COMMAND}" | envsubst >> /tmp/${uuid}_remotescript.sh
-echo 'echo $? > '/tmp/${uuid}_remotescript_returncode.txt >> /tmp/${uuid}_remotescript.sh
+echo 'echo 0 > '/tmp/${uuid}_remotescript_returncode.txt >> /tmp/${uuid}_remotescript.sh
 chmod +x /tmp/${uuid}_remotescript.sh
 cat /tmp/${uuid}_remotescript.sh
 
@@ -22,12 +22,13 @@ ssh  -o  StrictHostKeyChecking=no -o IdentitiesOnly=yes -i ./ssh_id_rsa -F /dev/
 scp -P 2222 -o 'StrictHostKeyChecking=no' -o 'IdentitiesOnly=yes' -i ./ssh_id_rsa -F /dev/null /tmp/${uuid}_remotescript.sh daqian@127.0.0.1:/tmp/${uuid}-github-aciton.sh
 ssh  -p 2222 -o  StrictHostKeyChecking=no -o IdentitiesOnly=yes -i ./ssh_id_rsa -F /dev/null ${TARGET_USER}@127.0.0.1 "chmod +x /tmp/${uuid}-github-aciton.sh" || true
 
+export COMMAND="set -o pipefail; /tmp/${uuid}-github-aciton.sh  2>&1 | tee /tmp/${uuid}-github-aciton.log || echo \$? > /tmp/${uuid}_remotescript_returncode.txt "
 
-ssh  -p 2222 -o  StrictHostKeyChecking=no -o IdentitiesOnly=yes -i ./ssh_id_rsa -F /dev/null ${TARGET_USER}@127.0.0.1 "/tmp/${uuid}-github-aciton.sh  2>&1 | tee /tmp/${uuid}-github-aciton.log" 
+ssh  -p 2222 -o  StrictHostKeyChecking=no -o IdentitiesOnly=yes -i ./ssh_id_rsa -F /dev/null ${TARGET_USER}@127.0.0.1 "${COMMAND}" 
 
 export returnCode=`ssh  -p 2222 -o  StrictHostKeyChecking=no -o IdentitiesOnly=yes -i ./ssh_id_rsa -F /dev/null daqian@127.0.0.1 "cat /tmp/${uuid}_remotescript_returncode.txt"`
 
-scp -P 2222 -o 'StrictHostKeyChecking=no' -o 'IdentitiesOnly=yes' -i ./ssh_id_rsa -F /dev/null daqian@127.0.0.1:$/tmp/{uuid}-github-aciton.log /tmp/${uuid}-github-aciton.log
+scp -P 2222 -o 'StrictHostKeyChecking=no' -o 'IdentitiesOnly=yes' -i ./ssh_id_rsa -F /dev/null daqian@127.0.0.1:/tmp/{uuid}-github-aciton.log /tmp/${uuid}-github-aciton.log
 
 #ssh  -p 2222 -o  StrictHostKeyChecking=no -o IdentitiesOnly=yes -i ./ssh_id_rsa -F /dev/null ${TARGET_USER}@127.0.0.1 "rm -rf /tmp/${uuid}*" || true
 
