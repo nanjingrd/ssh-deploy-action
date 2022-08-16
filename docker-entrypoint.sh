@@ -1,5 +1,5 @@
 #!/bin/sh
-set -ex
+set -e
 
 echo "#################################run in target host  #################################"
 export uuid=$(uuidgen |sed 's/-//g')
@@ -8,29 +8,29 @@ export uuid=$(uuidgen |sed 's/-//g')
 echo "${COMMAND}" | envsubst >> /tmp/${uuid}_remotescript.sh
 echo 'echo 0 > '/tmp/${uuid}_remotescript_returncode.txt >> /tmp/${uuid}_remotescript.sh
 chmod +x /tmp/${uuid}_remotescript.sh
-cat /tmp/${uuid}_remotescript.sh
+#cat /tmp/${uuid}_remotescript.sh
 
 sleep 1
 
-echo "${ID_RSA_P}" | base64 -d > ./ssh_id_rsa
-chmod 400 ./ssh_id_rsa
+echo "${ID_RSA_P}" | base64 -d > /tmp/git_action_ssh_id_rsa
+chmod 400 /tmp/git_action_ssh_id_rsa
 
 
 sleep 3
-ssh  -o  StrictHostKeyChecking=no -o IdentitiesOnly=yes -i ./ssh_id_rsa -F /dev/null -f  -L 0.0.0.0:2222:${TARGET_HOST}:${TARGET_PORT} ${JUMP_USER}@${JUMP_HOST} tail "-f /dev/null"
+ssh  -o  StrictHostKeyChecking=no -o IdentitiesOnly=yes -i /tmp/git_action_ssh_id_rsa -F /dev/null -f  -L 0.0.0.0:2222:${TARGET_HOST}:${TARGET_PORT} ${JUMP_USER}@${JUMP_HOST} tail "-f /dev/null"
 
-scp -P 2222 -o 'StrictHostKeyChecking=no' -o 'IdentitiesOnly=yes' -i ./ssh_id_rsa -F /dev/null /tmp/${uuid}_remotescript.sh daqian@127.0.0.1:/tmp/${uuid}-github-aciton.sh
-ssh  -p 2222 -o  StrictHostKeyChecking=no -o IdentitiesOnly=yes -i ./ssh_id_rsa -F /dev/null ${TARGET_USER}@127.0.0.1 "chmod +x /tmp/${uuid}-github-aciton.sh" || true
+scp -P 2222 -o 'StrictHostKeyChecking=no' -o 'IdentitiesOnly=yes' -i /tmp/git_action_ssh_id_rsa -F /dev/null /tmp/${uuid}_remotescript.sh daqian@127.0.0.1:/tmp/${uuid}-github-aciton.sh
+ssh  -p 2222 -o  StrictHostKeyChecking=no -o IdentitiesOnly=yes -i /tmp/git_action_ssh_id_rsa -F /dev/null ${TARGET_USER}@127.0.0.1 "chmod +x /tmp/${uuid}-github-aciton.sh" || true
 
 export COMMAND="set -o pipefail; /tmp/${uuid}-github-aciton.sh  2>&1 | tee /tmp/${uuid}-github-aciton.log || echo \$? > /tmp/${uuid}_remotescript_returncode.txt "
 
-ssh  -p 2222 -o  StrictHostKeyChecking=no -o IdentitiesOnly=yes -i ./ssh_id_rsa -F /dev/null ${TARGET_USER}@127.0.0.1 "${COMMAND}" 
+ssh  -p 2222 -o  StrictHostKeyChecking=no -o IdentitiesOnly=yes -i /tmp/git_action_ssh_id_rsa -F /dev/null ${TARGET_USER}@127.0.0.1 "${COMMAND}" 
 
-export returnCode=`ssh  -p 2222 -o  StrictHostKeyChecking=no -o IdentitiesOnly=yes -i ./ssh_id_rsa -F /dev/null daqian@127.0.0.1 "cat /tmp/${uuid}_remotescript_returncode.txt"`
+export returnCode=`ssh  -p 2222 -o  StrictHostKeyChecking=no -o IdentitiesOnly=yes -i /tmp/git_action_ssh_id_rsa -F /dev/null daqian@127.0.0.1 "cat /tmp/${uuid}_remotescript_returncode.txt"`
 
-scp -P 2222 -o 'StrictHostKeyChecking=no' -o 'IdentitiesOnly=yes' -i ./ssh_id_rsa -F /dev/null daqian@127.0.0.1:/tmp/${uuid}-github-aciton.log /tmp/${uuid}-github-aciton.log
+scp -P 2222 -o 'StrictHostKeyChecking=no' -o 'IdentitiesOnly=yes' -i /tmp/git_action_ssh_id_rsa -F /dev/null daqian@127.0.0.1:/tmp/${uuid}-github-aciton.log /tmp/${uuid}-github-aciton.log
 
-#ssh  -p 2222 -o  StrictHostKeyChecking=no -o IdentitiesOnly=yes -i ./ssh_id_rsa -F /dev/null ${TARGET_USER}@127.0.0.1 "rm -rf /tmp/${uuid}*" || true
+ssh  -p 2222 -o  StrictHostKeyChecking=no -o IdentitiesOnly=yes -i /tmp/git_action_ssh_id_rsa -F /dev/null ${TARGET_USER}@127.0.0.1 "rm -rf /tmp/${uuid}*" || true
 
 cat /tmp/${uuid}-github-aciton.log
 
