@@ -18,7 +18,7 @@ ssh  -p 2222 -o  StrictHostKeyChecking=no -o IdentitiesOnly=yes -i /tmp/git_acti
 
 export COMMAND="set -o pipefail; /tmp/github_action/${uuid}/${stage}-github-aciton.sh  2>&1 | tee /tmp/github_action/${uuid}/${stage}-github-aciton.log || echo \$? > /tmp/github_action/${uuid}/${stage}_remotescript_returncode.txt "
 
-echo "##########run in target host ##########"
+echo "##########run in target host stage: ${stage}  ##########"
 ssh  -p 2222 -o  StrictHostKeyChecking=no -o IdentitiesOnly=yes -i /tmp/git_action_ssh_id_rsa -F /dev/null ${TARGET_USER}@127.0.0.1 "${COMMAND}" 
 
 export returnCode=`ssh  -p 2222 -o  StrictHostKeyChecking=no -o IdentitiesOnly=yes -i /tmp/git_action_ssh_id_rsa -F /dev/null daqian@127.0.0.1 "cat /tmp/github_action/${uuid}/${stage}_remotescript_returncode.txt"`
