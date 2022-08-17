@@ -1,8 +1,5 @@
 #!/bin/sh
 
-export uuid=$(uuidgen |sed 's/-//g')
-echo "uuid is "${uuid}
-
 mkdir -p /root/.ssh
 mkdir -p ~/root/.ssh
 touch /root/.ssh/known_hosts
@@ -13,6 +10,12 @@ echo "${ID_RSA_P}" | base64 -d > /tmp/git_action_ssh_id_rsa
 chmod 400 /tmp/git_action_ssh_id_rsa
 
 ssh  -o  StrictHostKeyChecking=no -o IdentitiesOnly=yes -i /tmp/git_action_ssh_id_rsa -F /dev/null -f  -L 0.0.0.0:2222:${TARGET_HOST}:${TARGET_PORT} ${JUMP_USER}@${JUMP_HOST} tail "-f /dev/null"
+
+export uuid=$RANDOM
+export startTime=`ssh  -p 2222 -o  StrictHostKeyChecking=no -o IdentitiesOnly=yes -i /tmp/git_action_ssh_id_rsa -F /dev/null ${TARGET_USER}@127.0.0.1   date +"%m-%d-%y_%H-%M-%S"  `
+export uuid=${startTime}_${uuid}
+echo "uuid is "${uuid}
+
 sleep 2
 
 chmod +x /runcommand.sh
