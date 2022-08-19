@@ -44,9 +44,10 @@ mkdir -p /tmp/github_action
 echo "${TARGET_KEY}" | base64 -d > /tmp/target_key
 echo "${JUMP_KEY}" | base64 -d > /tmp/jump_ssh_key
 chmod 400 /tmp/target_key
+chmod 400 /tmp/jump_ssh_key
 
-export ssh_param=" -o  StrictHostKeyChecking=no -o IdentitiesOnly=yes -i /tmp/target_key -F /dev/null "
 ssh  -p ${JUMP_PORT} -o  StrictHostKeyChecking=no -o IdentitiesOnly=yes -i /tmp/jump_ssh_key -F /dev/null  -f  -L 0.0.0.0:2222:${TARGET_HOST}:${TARGET_PORT} ${JUMP_USER}@${JUMP_HOST} tail "-f /dev/null"
+export ssh_param=" -o  StrictHostKeyChecking=no -o IdentitiesOnly=yes -i /tmp/target_key -F /dev/null "
 
 export uuid=$RANDOM
 export startTime=`ssh  -p 2222 ${ssh_param}  ${TARGET_USER}@127.0.0.1   date +"%m-%d-%y_%H-%M-%S"  `
