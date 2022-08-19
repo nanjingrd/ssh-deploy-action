@@ -4,13 +4,49 @@ mkdir -p /root/.ssh
 mkdir -p ~/root/.ssh
 touch /root/.ssh/known_hosts
 
+if [ -z $TARGET_HOST ];then
+	$TARGET_HOST=22
+fi
+echo "TARGET_HOST = $TARGET_HOST"
+
+if [ -z $TARGET_PORT ];then
+	$TARGET_PORT=22
+fi
+echo "TARGET_PORT = $TARGET_PORT"
+
+if [ -z $TARGET_USER ];then
+	$TARGET_USER=22
+fi
+echo "TARGET_USER = $TARGET_USER"
+
+###################
+
+if [ -z $JUMP_HOST ];then
+	$JUMP_HOST=22
+fi
+echo "JUMP_HOST = $JUMP_HOST"
+
+
+if [ -z $JUMP_PORT ];then
+	$JUMP_PORT=22
+fi
+echo "JUMP_PORT = $JUMP_PORT"
+
+if [ -z $JUMP_USER ];then
+	$JUMP_USER=22
+fi
+echo "JUMP_USER = $JUMP_USER"
+
+########################
+
 mkdir -p /tmp/github_action
 
-echo "${ID_RSA_P}" | base64 -d > /tmp/git_action_ssh_id_rsa
-chmod 400 /tmp/git_action_ssh_id_rsa
+echo "${TARGET_KEY}" | base64 -d > /tmp/target_key
+echo "${JUMP_KEY}" | base64 -d > /tmp/jump_ssh_key
+chmod 400 /tmp/target_key
 
-export ssh_param=" -o  StrictHostKeyChecking=no -o IdentitiesOnly=yes -i /tmp/git_action_ssh_id_rsa -F /dev/null "
-ssh   ${ssh_param}  -f  -L 0.0.0.0:2222:${TARGET_HOST}:${TARGET_PORT} ${JUMP_USER}@${JUMP_HOST} tail "-f /dev/null"
+export ssh_param=" -o  StrictHostKeyChecking=no -o IdentitiesOnly=yes -i /tmp/target_key -F /dev/null "
+ssh  -p ${JUMP_PORT} -o  StrictHostKeyChecking=no -o IdentitiesOnly=yes -i /tmp/jump_ssh_key -F /dev/null  -f  -L 0.0.0.0:2222:${TARGET_HOST}:${TARGET_PORT} ${JUMP_USER}@${JUMP_HOST} tail "-f /dev/null"
 
 export uuid=$RANDOM
 export startTime=`ssh  -p 2222 ${ssh_param}  ${TARGET_USER}@127.0.0.1   date +"%m-%d-%y_%H-%M-%S"  `

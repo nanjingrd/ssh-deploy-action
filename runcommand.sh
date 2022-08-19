@@ -1,5 +1,11 @@
 #!/bin/sh
-set -ex
+if [ -z $ACTION_DEBUG ];then
+	set -e
+else
+    set -ex
+fi
+echo "JUMP_USER = $JUMP_USER"
+
 
 #export COMMAND=$(echo "{ ${COMMAND}  } > 2>&1 | tee /tmp/remote-${uuid}.txt" | envsubst)
 #echo "${COMMAND}"
