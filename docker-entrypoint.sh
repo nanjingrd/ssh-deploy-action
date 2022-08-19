@@ -13,7 +13,7 @@ export ssh_param=" -o  StrictHostKeyChecking=no -o IdentitiesOnly=yes -i /tmp/gi
 ssh   ${ssh_param}  -f  -L 0.0.0.0:2222:${TARGET_HOST}:${TARGET_PORT} ${JUMP_USER}@${JUMP_HOST} tail "-f /dev/null"
 
 export uuid=$RANDOM
-export startTime=`ssh  ${ssh_param}  ${TARGET_USER}@127.0.0.1   date +"%m-%d-%y_%H-%M-%S"  `
+export startTime=`ssh  -p 2222 ${ssh_param}  ${TARGET_USER}@127.0.0.1   date +"%m-%d-%y_%H-%M-%S"  `
 export uuid=${startTime}_${uuid}
 echo "uuid is "${uuid}
 
