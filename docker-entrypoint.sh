@@ -5,35 +5,35 @@ mkdir -p ~/root/.ssh
 touch /root/.ssh/known_hosts
 
 if [ -z $TARGET_HOST ];then
-	$TARGET_HOST=22
+	export TARGET_HOST=22
 fi
 echo "TARGET_HOST = $TARGET_HOST"
 
 if [ -z $TARGET_PORT ];then
-	$TARGET_PORT=22
+	export TARGET_PORT=22
 fi
 echo "TARGET_PORT = $TARGET_PORT"
 
 if [ -z $TARGET_USER ];then
-	$TARGET_USER=22
+	export TARGET_USER=22
 fi
 echo "TARGET_USER = $TARGET_USER"
 
 ###################
 
 if [ -z $JUMP_HOST ];then
-	$JUMP_HOST=22
+	export JUMP_HOST=22
 fi
 echo "JUMP_HOST = $JUMP_HOST"
 
 
 if [ -z $JUMP_PORT ];then
-	$JUMP_PORT=22
+	export JUMP_PORT=22
 fi
 echo "JUMP_PORT = $JUMP_PORT"
 
 if [ -z $JUMP_USER ];then
-	$JUMP_USER=22
+	export JUMP_USER=22
 fi
 echo "JUMP_USER = $JUMP_USER"
 
