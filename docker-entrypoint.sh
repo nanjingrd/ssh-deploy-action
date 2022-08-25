@@ -7,35 +7,43 @@ touch /root/.ssh/known_hosts
 if [ -z $TARGET_HOST ];then
 	export TARGET_HOST=22
 fi
-echo "TARGET_HOST = $TARGET_HOST"
+
 
 if [ -z $TARGET_PORT ];then
 	export TARGET_PORT=22
 fi
-echo "TARGET_PORT = $TARGET_PORT"
 
 if [ -z $TARGET_USER ];then
 	export TARGET_USER=22
 fi
-echo "TARGET_USER = $TARGET_USER"
+
 
 ###################
 
 if [ -z $JUMP_HOST ];then
 	export JUMP_HOST=22
 fi
-echo "JUMP_HOST = $JUMP_HOST"
-
 
 if [ -z $JUMP_PORT ];then
 	export JUMP_PORT=22
 fi
-echo "JUMP_PORT = $JUMP_PORT"
+
 
 if [ -z $JUMP_USER ];then
 	export JUMP_USER=22
 fi
-echo "JUMP_USER = $JUMP_USER"
+
+if [ -z $ACTION_DEBUG ];then
+	echo " "
+else
+    echo "TARGET_HOST = $TARGET_HOST"
+    echo "TARGET_PORT = $TARGET_PORT"
+    echo "TARGET_USER = $TARGET_USER"
+
+    echo "JUMP_HOST = $JUMP_HOST"
+    echo "JUMP_PORT = $JUMP_PORT"
+    echo "JUMP_USER = $JUMP_USER"
+fi
 
 ########################
 
@@ -49,6 +57,8 @@ chmod 400 /tmp/jump_ssh_key
 ssh  -p ${JUMP_PORT} -o  StrictHostKeyChecking=no -o IdentitiesOnly=yes -i /tmp/jump_ssh_key -F /dev/null  -f  -L 0.0.0.0:2222:${TARGET_HOST}:${TARGET_PORT} ${JUMP_USER}@${JUMP_HOST} tail "-f /dev/null"
 export ssh_param=" -o  StrictHostKeyChecking=no -o IdentitiesOnly=yes -i /tmp/target_key -F /dev/null "
 
+#todo
+#need keep ping to keep channel open  or using autossh
 export uuid=$RANDOM
 export startTime=`ssh  -p 2222 ${ssh_param}  ${TARGET_USER}@127.0.0.1   date +"%m-%d-%y_%H-%M-%S"  `
 export uuid=${startTime}_${uuid}
@@ -79,6 +89,9 @@ echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>post log end<<<<<<<<<<<<<<<<<<<<<<<<<<"
 
 export returnCode=`cat /tmp/github_action/main-github-aciton-code.txt`
 export runlog=`cat /tmp/github_action/main-github-aciton.log`
+runlog="${runlog//'%'/'%25'}"
+runlog="${runlog//$'\n'/'%0A'}"
+runlog="${runlog//$'\r'/'%0D'}"
 
 #ssh  ${ssh_param}  ${TARGET_USER}@127.0.0.1 "rm -rf /tmp/github_action/${uuid}/*" || true
 
