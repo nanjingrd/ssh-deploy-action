@@ -88,7 +88,9 @@ echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>post log end<<<<<<<<<<<<<<<<<<<<<<<<<<"
 
 
 export return_code=`cat /tmp/github_action/main-github-aciton-code.txt`
-export run_log=`cat /tmp/github_action/main-github-aciton.log`
+if [[ "${return_code}" -ne 0 ]]; then export ln="18"; else  export ln="6"; fi 
+export run_log=`tail -n  $ln /tmp/github_action/main-github-aciton.log` 
+
 run_log="${run_log//'%'/'%25'}"
 run_log="${run_log//$'\n'/'%0A'}"
 run_log="${run_log//$'\r'/'%0D'}"
