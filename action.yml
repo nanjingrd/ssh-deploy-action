@@ -5,11 +5,16 @@ inputs:
   ssh_private_key:
     description: SSH private key used to connect to the docker host
     required: true
+
 outputs:
-  returnCode:
-    description: 'if returnCode is 0, means the commond run successfully, otherwise, it means the commond run failed'
-  runlog: 
-    description: 'The stout and sterr from remote server'
+  succeed: 
+    description: 'is command run successfully'
+  message: 
+    description: 'action message'
+  return_code: 
+    description: 'return_code'
+  run_log: 
+    description: 'run_log'
 
 runs:
   using: docker

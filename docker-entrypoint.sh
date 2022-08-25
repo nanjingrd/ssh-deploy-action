@@ -87,15 +87,20 @@ cat /tmp/github_action/${stage}-github-aciton.log
 echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>post log end<<<<<<<<<<<<<<<<<<<<<<<<<<"
 
 
-export returnCode=`cat /tmp/github_action/main-github-aciton-code.txt`
-export runlog=`cat /tmp/github_action/main-github-aciton.log`
-runlog="${runlog//'%'/'%25'}"
-runlog="${runlog//$'\n'/'%0A'}"
-runlog="${runlog//$'\r'/'%0D'}"
+export return_code=`cat /tmp/github_action/main-github-aciton-code.txt`
+export run_log=`cat /tmp/github_action/main-github-aciton.log`
+run_log="${run_log//'%'/'%25'}"
+run_log="${run_log//$'\n'/'%0A'}"
+run_log="${run_log//$'\r'/'%0D'}"
 
 #ssh  ${ssh_param}  ${TARGET_USER}@127.0.0.1 "rm -rf /tmp/github_action/${uuid}/*" || true
 
-echo "::set-output name=runlog::$runlog"
-echo "::set-output name=returnCode::$returnCode"
+if [[ "${return_code}" -ne 0 ]]; then export succeed="false"; else  export  succeed="true"; fi 
+if [[ "${return_code}" -ne 0 ]]; then export message="$git_source sync to $git_remote  Failed"; else  export  message="$git_source sync to $git_remote successed"; fi
 
-exit $returnCode
+echo "::set-output name=succeed::$succeed"
+echo "::set-output name=message::$message"
+echo "::set-output name=return_code::$return_code"
+echo "::set-output name=run_log::$run_log"
+
+exit $return_code
